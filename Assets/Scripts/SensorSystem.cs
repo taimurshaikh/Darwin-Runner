@@ -7,12 +7,11 @@ using MathNet.Numerics.LinearAlgebra;
 public class SensorSystem : MonoBehaviour
 {
     [SerializeField]
-    private float sensorLength;
-    [SerializeField]
     private GameObject[] obstacles;
     private Dictionary<string, int> tagsToNum = new Dictionary<string, int>();
 
     public AgentNN agentNN;
+    public float maxViewDistance = 1000f;
 
     int cols;
 
@@ -34,7 +33,7 @@ public class SensorSystem : MonoBehaviour
 
     Vector3[] InstantiateDirVectors()
     {
-        // Five vectors at increasing angles of 45 degrees clockwise around center of transform
+        // Five vectors at increasing angles around center of transform
         Vector3 left = -transform.right;
         Vector3 fLeft = -transform.right + 0.5f*transform.forward;
         Vector3 forward = transform.forward;
@@ -60,17 +59,24 @@ public class SensorSystem : MonoBehaviour
         {
             ray.direction = v;
 
-            if (Physics.Raycast(ray, out hit))
+            if (Physics.Raycast(ray, out hit) && hit.distance <= maxViewDistance)
             {
-                Debug.DrawLine(ray.origin, hit.point, Color.red);
+                
                 if (hit.collider.gameObject.tag != "Agent" && hit.collider.gameObject.tag != "Untagged")
                 {
+                    if (hit.collider.gameObject.tag == "LWall" || hit.collider.gameObject.tag == "RWall")
+                    {
+                        Debug.DrawLine(ray.origin, hit.point, Color.blue);    
+                    }
+                    else{
+                        Debug.DrawLine(ray.origin, hit.point, Color.green);
+                    }
                     hitDistances.Add(hit.distance);
                     collidedObjects.Add(tagsToNum[hit.collider.gameObject.tag]);
-                    Debug.DrawLine(ray.origin, hit.point, Color.green);
                 }
                 else
                 {
+                    Debug.DrawLine(ray.origin, hit.point, Color.red);
                     // If sensors did not detect an obstacle, add dummy values to list as we need the order of the sensors to be preserved when passed into the input layer
                     hitDistances.Add(-1f);
                     collidedObjects.Add(-1);
@@ -78,6 +84,7 @@ public class SensorSystem : MonoBehaviour
             }
             else
             {
+                //Debug.DrawLine(ray.origin, hit.point, Color.red);
                 // Again, add dummy values if there was no RayCast event (no collision)
                 hitDistances.Add(-1f);
                 collidedObjects.Add(-1);

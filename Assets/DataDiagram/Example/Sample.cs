@@ -27,7 +27,7 @@ public class Sample : MonoBehaviour {
     // Use this for initialization
     void Start () {
 
-        GameObject dd = GameObject.Find("DataDiagram");
+        GameObject dd = GameObject.Find("Sample");
         if(null == dd) {
             Debug.LogWarning("can not find a gameobject of DataDiagram");
             return;

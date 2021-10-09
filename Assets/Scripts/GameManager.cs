@@ -1,54 +1,60 @@
 ﻿using UnityEngine;
 using System;
 using UnityEngine.SceneManagement;
+using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
 { 
-    public GAManager genetic;
-    public HoldValues hold;    
+    private GAManager genetic;
+    private WindowGraph graph;
+    private HoldValues hold;    
     public static GameManager instance;
 
     void Awake()
     {
         if (instance == null)
+        {
             instance = this;
+        }
         else
         {
             Destroy(gameObject);
             return;
         }
         DontDestroyOnLoad(gameObject);
-        
-        //Cursor.lockState = CursorLockMode.Locked;
+
+        genetic = GameObject.Find("GAManager").GetComponent<GAManager>();
         hold = GameObject.Find("Holder").GetComponent<HoldValues>();
+        graph = GameObject.Find("WindowGraph").GetComponent<WindowGraph>();
     }
 
     void LateUpdate()
     {
-        CheckForRestart();
-    }
-
-    void CheckForRestart()
-    {
-        if (genetic.Population.Count == 0 && genetic.Initialising == false)
-        {
-           // Debug.Log("ENDING GENERATION");
-            genetic.EndGeneration();
+        // Checking if current generation has ended
+        if (genetic.Population.Count == 0 && genetic.Initialising == false && !genetic.Ended)
+        {     
             Restart();
         }
     }
 
-    void Restart ()
+    public void Restart (bool resetEvolution=false)
     {
-        if (hold.firstGen == true)
+        genetic.EndGeneration();
+        if (hold.firstGen == true && !resetEvolution)
         {
             hold.firstGen = false;
         }
-       // Debug.Log("NEW SCENE LOADING");
-        //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        //Debug.Log("LOADED");
+        graph.ClearGraph();
+        graph.AddNewPoint(genetic.AverageFitness());
+        graph.ShowGraph();
         GameObject.Find("CourseManager").GetComponent<CourseManager>().SpawnFirstTiles();
-        genetic.InitNewGen();
+        genetic.InitNewGen(resetEvolution);
         GameObject.Find("Main Camera").GetComponent<FollowPlayer>().ResetPos();
+    }
+
+    public void QuitToMenu()
+    {
+        hold.firstGen = true;
+        SceneManager.LoadScene("StartMenu");
     }
 }

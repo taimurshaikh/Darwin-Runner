@@ -45,7 +45,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   agent: {fileID: 5600396778769207170}
   movement: {fileID: 5600396779034433057}
-  jumpCoolDown: 12
 --- !u!1 &5600396777873173493
 GameObject:
   m_ObjectHideFlags: 0
@@ -828,14 +827,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 312b6764986690248ba56d46008365c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sensorLength: 5
   obstacles:
   - {fileID: 7883871934510557766, guid: f0362686897b2e246b03f9241c220a10, type: 3}
   - {fileID: 5508581828559287027, guid: 5ee74a8419bf85a459d83e78f37d4e3c, type: 3}
   - {fileID: 6365560580971868745, guid: 60e7afb2f2fe8e54182f25521d5b8ee6, type: 3}
   - {fileID: 8413426001842727482, guid: 810c1986bdc171641bfce34fcf641fa4, type: 3}
   - {fileID: 7099523476297863479, guid: c3d044ddf2d6d6540b6d5845b9d97bbb, type: 3}
+  - {fileID: 947345783083239904, guid: 6d1207a8887014d4094e7721c5e031c6, type: 3}
+  - {fileID: 4808582568006333295, guid: 652770bdc5ee86043b6fe789a0bcc8fc, type: 3}
   agentNN: {fileID: 2267639356170808763}
+  maxViewDistance: 30
 --- !u!1 &5600396778661375577
 GameObject:
   m_ObjectHideFlags: 0

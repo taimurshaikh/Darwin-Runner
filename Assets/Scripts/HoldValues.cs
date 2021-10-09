@@ -25,7 +25,7 @@ public class HoldValues : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-        Debug.Log("HOLDER AWAKENING");
+        //Debug.Log("HOLDER AWAKENING");
         GenerationNum = 1;
         DontDestroyOnLoad(gameObject);
     }

@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-//  using System.Linq.Sum;
+using System.Linq;
 using UnityEngine;
 using MathNet.Numerics.LinearAlgebra;
 using Random = UnityEngine.Random;
@@ -9,15 +9,13 @@ public class GAManager : MonoBehaviour
 {
     HoldValues hold;
     public GameObject agentPrefab;
-
+    GameManager gm;
     public int GenerationNum
     { get; set; }
 
     [Header("Parameters")]
-   // [Range(2, 100)]
 
     public int popSize;
-   // [Range(0f, 1f)]
     public float mutationRate;
 
     public List<GameObject> Population
@@ -33,6 +31,8 @@ public class GAManager : MonoBehaviour
 
     public bool Initialising
     { get; set; }
+    public bool Ended
+    { get; set; }
     public static GAManager instance;
 
     void Awake()
@@ -46,6 +46,7 @@ public class GAManager : MonoBehaviour
         }
         DontDestroyOnLoad(gameObject);
 
+        Ended = false;
         // GA Structures and Params
         MatingPool = new List<NN>();
         Fitnesses = new List<float>();
@@ -58,19 +59,45 @@ public class GAManager : MonoBehaviour
         hold = GameObject.FindWithTag("Holder").GetComponent<HoldValues>();
         mutationRate = hold.mr;
         popSize = hold.ps;
+        gm = GameObject.FindWithTag("GameManager").GetComponent<GameManager>();
     }
 
     void Start()    
     {
         InitPop(); 
+        Debug.Log("lol");
     }
 
-    void Update()
+    public void ResetEvolution()
     {
-       
+        GenerationNum = 0;
+        nextGen.Clear();
+        foreach (GameObject a in Population)
+        {
+            Destroy(a);
+        }
+        Population.Clear();
+        MatingPool.Clear();
+        Fitnesses.Clear();
+        gm.Restart(true);
     }
 
-    void InitPop()
+    public void EndEvolution()
+    {
+        GenerationNum = 0;
+        nextGen.Clear();
+        foreach (GameObject a in Population)
+        {
+            Destroy(a);
+        }
+        Population.Clear();
+        MatingPool.Clear();
+        Fitnesses.Clear();
+        Ended = true;
+        gm.QuitToMenu();
+    }
+
+    private void InitPop()
     {   
         for(int i = 0; i < popSize; i++)
         {
@@ -86,13 +113,11 @@ public class GAManager : MonoBehaviour
         {
             res -= ((1/jumpCount) + (1/slideCount));
         } 
-        Debug.Log(res);
         return res;
     }
 
-    NN SelectParent()
+    private NN SelectParent()
     {
-       // Debug.Log("PARENT SELECTION MATING POOL COUNT: " + MatingPool.Count.ToString());
         // Start at 0
         int index = 0;
 
@@ -115,7 +140,7 @@ public class GAManager : MonoBehaviour
         return res;
     }
 
-    (NN, NN) Crossover(NN parentA, NN parentB)
+    private (NN, NN) Crossover(NN parentA, NN parentB)
     {
         NN childA = new NN();
         NN childB = new NN();
@@ -150,7 +175,7 @@ public class GAManager : MonoBehaviour
         return (childA, childB);
     }
 
-    public NN Mutate(NN nn)
+    private NN Mutate(NN nn)
     {  
         for (int i = 0; i < nn.weights.Count; i++)
         {
@@ -174,13 +199,10 @@ public class GAManager : MonoBehaviour
         return nn;
     }
 
-    // Runs once all agents are dead
+    // Runs once all of this generation's agents are dead
     public void EndGeneration()
     {
-       // Debug.Log("END GEN MATING POOL COUNT: " + MatingPool.Count.ToString());
         nextGen.Clear();
-        //NormalizeFitnesses();
-        Debug.Log(Fitnesses[Fitnesses.Count - 1]);
         nextGen.Add(MatingPool[MatingPool.Count - 1]);
         int offset = 0;
         if (popSize % 2 == 0)
@@ -200,12 +222,13 @@ public class GAManager : MonoBehaviour
         MatingPool.Clear();
         Fitnesses.Clear();
         Population.Clear();
-        hold.GenerationNum++;
+        
+        GenerationNum++;
 
         Initialising = true;
     }
 
-    public void InitNewGen()
+    public void InitNewGen(bool reset=false)
     {
        // Debug.Log("NEW GEN COUNT: " + nextGen.Count.ToString());
         for(int i = 0; i < popSize; i++)
@@ -214,7 +237,12 @@ public class GAManager : MonoBehaviour
             GameObject newAgent = Instantiate(agentPrefab);
             //Debug.Break();
            // newAgent.transform.position = Vector3.zero;
-            newAgent.transform.Find("AgentNN").GetComponent<AgentNN>().nn = nextGen[i];
+
+            // Only update the newAgents with nextGen NNs if we are not resetting the evolution in this case 
+            if(!reset)
+            {
+                newAgent.transform.Find("AgentNN").GetComponent<AgentNN>().nn = nextGen[i];
+            }
             Population.Add(newAgent);
         }
 
@@ -266,7 +294,7 @@ public class GAManager : MonoBehaviour
 
     // }
 
-   void NormalizeFitnesses()
+   private void NormalizeFitnesses()
    {
         // Make score exponentially better?
         for (int i = 0; i < Fitnesses.Count; i++) {
@@ -282,5 +310,11 @@ public class GAManager : MonoBehaviour
         for (int i = 0; i < Fitnesses.Count; i++) {
             Fitnesses[i] /= sum;
         }    
+   }
+
+   public float AverageFitness()
+   {
+       float res = Fitnesses.Sum() / popSize;
+       return res;
    }
 }

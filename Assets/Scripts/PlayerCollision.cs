@@ -42,15 +42,23 @@ public class PlayerCollision : MonoBehaviour
             collided.collider.tag == "Boombox" || 
             collided.collider.tag == "Enemy")
         {
-            anim.SetBool("Alive", false);
-            anim.SetBool("Fall", false);
-            anim.SetBool("Run", false);
-            anim.SetBool("Jump", false);
-            anim.SetBool("Slide", false);
-            anim.SetBool("Flip", false);
-            movement.enabled = false;
-            
-            dead = true;
+            if (collided.collider.tag == "Boombox" && movement.isSliding)
+            {
+                Physics.IgnoreCollision(collided.gameObject.GetComponent<Collider>(), GetComponent<Collider>());
+                //Debug.Log("Faded");
+            }
+            else
+            {
+                anim.SetBool("Alive", false);
+                anim.SetBool("Fall", false);
+                anim.SetBool("Run", false);
+                anim.SetBool("Jump", false);
+                anim.SetBool("Slide", false);
+                anim.SetBool("Flip", false);
+                movement.enabled = false;
+                
+                dead = true;
+            }
             
         }
         // Agents must not collide with other agents

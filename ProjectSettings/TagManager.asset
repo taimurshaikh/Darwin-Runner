@@ -19,6 +19,8 @@ TagManager:
   - FirstTimeCheck
   - GameManager
   - Holder
+  - RWall
+  - LWall
   layers:
   - Default
   - TransparentFX
