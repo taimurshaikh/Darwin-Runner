@@ -20,8 +20,6 @@ public class MainMenu : MonoBehaviour
     {
         // Loads next Scene in the queue (this is the main visualisation scene as there are only two scenes)
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-
-        //Cursor.lockState = CursorLockMode.Locked;
     }
 
     // Executed when Quit Button Clicked

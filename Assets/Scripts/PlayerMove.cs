@@ -60,71 +60,50 @@ public class PlayerMove : MonoBehaviour
         moveForward = new Vector3(0, 0 , forwardSpeed);
         movement = moveHorizontal + moveForward;
 
-        if (rb.velocity.y < 0)
-        {
+        if (rb.velocity.y < 0) {
             rb.velocity += Vector3.up * Physics.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
-        }
-        else if (rb.velocity.y > 0 && !isJumpPressed)
-        {
+        } else if (rb.velocity.y > 0 && !isJumpPressed) {
             rb.velocity += Vector3.up * Physics.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
         }
 
-        if (IsGrounded())
-        {
-            if (isSliding)
-            {
-                if (!isJumpPressed)
-                {
+        if (IsGrounded()) {
+            if (isSliding) {
+                if (!isJumpPressed) {
                     anim.SetBool("Slide", true);
                     anim.SetBool("Run", false);
-                }
-                
-                else
-                {
+                } else {
                     anim.SetBool("Slide", false);
                 }
                 Slide();
-            }
-            else if (slideStopped)
-            {
+            } else if (slideStopped) {
                 resetSlide();
             }
         }
 
-    if (transform.position.z > speedMilestoneCount && forwardSpeed < maxSpeed && IsGrounded())
-    {
-        speedMilestoneCount += speedIncreaseMilestone;
-        speedIncreaseMilestone *= speedMultiplier;
+        if (transform.position.z > speedMilestoneCount && forwardSpeed < maxSpeed && IsGrounded()) {
+            speedMilestoneCount += speedIncreaseMilestone;
+            speedIncreaseMilestone *= speedMultiplier;
 
-        forwardSpeed *= speedMultiplier;
-        tempSpeed = forwardSpeed;
-    }
-
+            forwardSpeed *= speedMultiplier;
+            tempSpeed = forwardSpeed;
+        }
     }
 
     void FixedUpdate() 
     {
-
-        if (IsGrounded())
-        {
+        if (IsGrounded()) {
             forwardSpeed = tempSpeed;
             tempSpeed = forwardSpeed;
-        }
-        else
-        {
+        } else {
             forwardSpeed = forwardSpeedWhileInAir;
         }
-        if (IsGrounded() && !isSliding)
-        {
+        if (IsGrounded() && !isSliding) {
             anim.SetBool("Run", true);
             anim.SetBool("Jump", false);
             anim.SetBool("Fall", false);
             anim.SetBool("Slide", false);
             anim.SetBool("Flip", false);
-        }
-
-        else if (IsGrounded() && isSliding)
-        {
+        } else if (IsGrounded() && isSliding) {
             anim.SetBool("Run", false);
             anim.SetBool("Jump", false);
             anim.SetBool("Fall", false);
@@ -133,18 +112,13 @@ public class PlayerMove : MonoBehaviour
         }
 
         //JUMPING
-        if (IsGrounded() && isJumpPressed)
-        { 
-            if (isSliding)
-            {
+        if (IsGrounded() && isJumpPressed) { 
+            if (isSliding) {
                 anim.SetBool("Run", false);
                 anim.SetBool("Slide", false);
                 anim.SetBool("Fall", false);
                 anim.SetBool("Flip", true); 
-            }
-
-            else
-            {
+            } else {
                 anim.SetBool("Run", false);
                 anim.SetBool("Slide", false);
                 anim.SetBool("Jump", true);
@@ -158,8 +132,7 @@ public class PlayerMove : MonoBehaviour
         } 
 
  
-        else if (!IsGrounded() && !anim.GetBool("Jump"))
-        {
+        else if (!IsGrounded() && !anim.GetBool("Jump")) {
 
             anim.SetBool("Run", false);
             anim.SetBool("Slide", false);

@@ -12,7 +12,7 @@ public class PlayerCollision : MonoBehaviour
     GAManager gm;
 
     private bool dead = false;
-    void Awake()
+    private void Awake()
     {
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
@@ -20,7 +20,7 @@ public class PlayerCollision : MonoBehaviour
         audioManager = FindObjectOfType<AudioManager>();    
     }
     
-    void Update()
+    private void Update()
     {
         if ((transform.position.y < -1) || (System.Math.Abs(transform.position.x) > 7))
         {
@@ -35,20 +35,16 @@ public class PlayerCollision : MonoBehaviour
         }
     }
 
-    void OnCollisionEnter (Collision collided)
+    private void OnCollisionEnter (Collision collided)
     {
         if (collided.collider.tag == "Spike" || 
             collided.collider.tag == "RedSpikes" ||
             collided.collider.tag == "Boombox" || 
             collided.collider.tag == "Enemy")
         {
-            if (collided.collider.tag == "Boombox" && movement.isSliding)
-            {
+            if (collided.collider.tag == "Boombox" && movement.isSliding) {
                 Physics.IgnoreCollision(collided.gameObject.GetComponent<Collider>(), GetComponent<Collider>());
-                //Debug.Log("Faded");
-            }
-            else
-            {
+            } else {
                 anim.SetBool("Alive", false);
                 anim.SetBool("Fall", false);
                 anim.SetBool("Run", false);
@@ -60,10 +56,8 @@ public class PlayerCollision : MonoBehaviour
                 dead = true;
             }
             
-        }
-        // Agents must not collide with other agents
-        else if (collided.collider.tag == "Agent")
-        {
+        } else if (collided.collider.tag == "Agent") {
+            // Agents must not collide with other agents
             Physics.IgnoreCollision(collided.gameObject.GetComponent<Collider>(), GetComponent<Collider>());
         }
 

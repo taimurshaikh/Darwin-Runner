@@ -50,21 +50,18 @@ public class NN
     public void PopulateNN()
     {
         // Handle hidden layers and weights
-        for (int i = 0; i < numHiddenLayers; i++)
-        {
+        for (int i = 0; i < numHiddenLayers; i++) {
             Matrix<float> newHiddenLayer = Matrix<float>.Build.Dense(1, numHiddenNodes);
             hiddenLayers.Add(newHiddenLayer);
             biases.Add(Random.Range(-1f, 1f));
 
             // Matrix for input to first hidden layer will have different dimensions
-            if (i == 0)
-            {
+            if (i == 0) {
                 Matrix<float> firstWeights = Matrix<float>.Build.Dense(numInputs, numHiddenNodes);
                 weights.Add(firstWeights);
             }
 
-            if (i < numHiddenLayers - 1)
-            {   
+            if (i < numHiddenLayers - 1) {   
                 Matrix<float> newWeights = Matrix<float>.Build.Dense(numHiddenNodes, numHiddenNodes);
                 weights.Add(newWeights);
             }
@@ -85,34 +82,29 @@ public class NN
         hiddenLayers[0].PointwiseTanh();
 
         // First to penultimate hidden layer
-        for (int i = 1; i < hiddenLayers.Count; i++)
-        {
+        for (int i = 1; i < hiddenLayers.Count; i++) {
             hiddenLayers[i] = ((hiddenLayers[i-1] * weights[i]) + biases[i]).PointwiseTanh();
         }
         // Last hidden layer to output layer
         outputLayer = ((hiddenLayers[hiddenLayers.Count-1] * weights[weights.Count-1]) + biases[biases.Count-1]);
-        for (int i = 0; i < outputLayer.ColumnCount; i++)
-        {
+        for (int i = 0; i < outputLayer.ColumnCount; i++) {
             // Sigmoid every element in output vector
-            outputLayer[0, i] = Sigmoid(outputLayer[0, i]);
+            outputLayer[0, i] = sigmoid(outputLayer[0, i]);
         }
     }
 
     public void RandomiseWeights()
     {
-        for (int i = 0; i < weights.Count; i++)
-        {
-            for (int j = 0; j < weights[i].RowCount; j++)
-            {
-                for (int k = 0; k < weights[i].ColumnCount; k++)
-                {
+        for (int i = 0; i < weights.Count; i++) {
+            for (int j = 0; j < weights[i].RowCount; j++) {
+                for (int k = 0; k < weights[i].ColumnCount; k++) {
                     weights[i][j, k] = Random.Range(-1f, 1f);
                 }
             }
         }
     }
 
-    private float Sigmoid(float z)
+    private float sigmoid(float z)
     {
         return (1 / (1 + Mathf.Exp(-z)));
     }

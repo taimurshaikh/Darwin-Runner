@@ -10,14 +10,11 @@ public class GameManager : MonoBehaviour
     private HoldValues hold;    
     public static GameManager instance;
 
-    void Awake()
+    private void Awake()
     {
-        if (instance == null)
-        {
+        if (instance == null) {
             instance = this;
-        }
-        else
-        {
+        } else {
             Destroy(gameObject);
             return;
         }
@@ -28,24 +25,28 @@ public class GameManager : MonoBehaviour
         graph = GameObject.Find("WindowGraph").GetComponent<WindowGraph>();
     }
 
-    void LateUpdate()
+    private void LateUpdate()
+    {
+        checkForRestart();
+    }
+
+    private void checkForRestart()
     {
         // Checking if current generation has ended
-        if (genetic.Population.Count == 0 && genetic.Initialising == false && !genetic.Ended)
-        {     
+        if (genetic.Population.Count == 0 && genetic.Initialising == false && !genetic.GameEnded) {
+            graph.AddNewPoint(genetic.AverageFitness());
+            genetic.EndGeneration();     
             Restart();
         }
     }
 
-    public void Restart (bool resetEvolution=false)
+    public void Restart(bool resetEvolution=false)
     {
-        genetic.EndGeneration();
-        if (hold.firstGen == true && !resetEvolution)
-        {
+        if (hold.firstGen == true && !resetEvolution) {
             hold.firstGen = false;
         }
-        graph.ClearGraph();
-        graph.AddNewPoint(genetic.AverageFitness());
+        
+        graph.ClearGraph(resetEvolution);
         graph.ShowGraph();
         GameObject.Find("CourseManager").GetComponent<CourseManager>().SpawnFirstTiles();
         genetic.InitNewGen(resetEvolution);
@@ -54,7 +55,7 @@ public class GameManager : MonoBehaviour
 
     public void QuitToMenu()
     {
-        hold.firstGen = true;
         SceneManager.LoadScene("StartMenu");
+        Destroy(gameObject);
     }
 }
