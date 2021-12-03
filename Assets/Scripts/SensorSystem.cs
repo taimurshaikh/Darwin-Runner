@@ -17,7 +17,7 @@ public class SensorSystem : MonoBehaviour
     public AgentNN agentNN;
 
     // Defining the maximum distance in all directions that can agent can 'see'
-    public float maxViewDistance = 1000f;
+    public float maxViewDistance = 100f;
 
     int cols;
 
@@ -64,6 +64,9 @@ public class SensorSystem : MonoBehaviour
         // The RaycastHit object is what we use to store the collision event
         RaycastHit hit;
 
+        float hitDistanceToAdd;
+        int collisionTagToAdd;
+
         // Check collision for each sensor
         foreach(Vector3 v in dirVectors) {
 
@@ -88,9 +91,9 @@ public class SensorSystem : MonoBehaviour
                     }
                     
                     // Add the distance from the obstacle to the sensor's source (centre of the agent) to the corresponding array
-                    hitDistances.Add(hit.distance);
-                    // And then add the numerical ID of the obstacle type to this array
-                    collidedObjects.Add(tagsToNum[hit.collider.gameObject.tag]);
+                    hitDistanceToAdd = hit.distance;
+                    // And also add the numerical ID of the obstacle type to this array
+                    collisionTagToAdd = tagsToNum[hit.collider.gameObject.tag];
                 
                 } else {
 
@@ -98,19 +101,22 @@ public class SensorSystem : MonoBehaviour
                     Debug.DrawLine(ray.origin, hit.point, Color.red);
 
                     // If sensors did not detect an obstacle, add dummy values to list as we need the order of the sensors to be preserved when passed into the input layer
-                    hitDistances.Add(-1f);
-                    collidedObjects.Add(-1);
+                    hitDistanceToAdd = -1f;
+                    collisionTagToAdd = -1;
                 }
 
             } else {
 
                 // If the sensor didn't detect anything at all, also colour it red
-                Debug.DrawLine(ray.origin, hit.point, Color.red);
+                //Debug.DrawLine(ray.origin, hit.point, Color.red);
 
                 // Again, add dummy values if there was no RayCast event (no collision)
-                hitDistances.Add(-1f);
-                collidedObjects.Add(-1);
+                hitDistanceToAdd = -1f;
+                collisionTagToAdd = -1;
             }
+
+            hitDistances.Add(hitDistanceToAdd);
+            collidedObjects.Add(collisionTagToAdd);
             
         }
 

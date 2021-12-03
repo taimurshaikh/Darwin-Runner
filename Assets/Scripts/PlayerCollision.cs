@@ -22,13 +22,11 @@ public class PlayerCollision : MonoBehaviour
     
     private void Update()
     {
-        if ((transform.position.y < -1) || (System.Math.Abs(transform.position.x) > 7))
-        {
+        if ((transform.position.y < -1) || (System.Math.Abs(transform.position.x) > 7)) {
             dead = true;
         }
 
-        if (dead)
-        {
+        if (dead) {
             currFitness = gm.Fitness(transform, agentNN.JumpCount, agentNN.SlideCount);
             gm.AgentDeath(agentNN.nn, currFitness, gameObject);
             audioManager.Play("Die");
@@ -40,8 +38,8 @@ public class PlayerCollision : MonoBehaviour
         if (collided.collider.tag == "Spike" || 
             collided.collider.tag == "RedSpikes" ||
             collided.collider.tag == "Boombox" || 
-            collided.collider.tag == "Enemy")
-        {
+            collided.collider.tag == "Enemy") {
+                
             if (collided.collider.tag == "Boombox" && movement.isSliding) {
                 Physics.IgnoreCollision(collided.gameObject.GetComponent<Collider>(), GetComponent<Collider>());
             } else {

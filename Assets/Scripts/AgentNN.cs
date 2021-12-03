@@ -10,11 +10,14 @@ public class AgentNN : MonoBehaviour
     public Transform agent;
     public PlayerMove movement;
 
+    // Keeping track of jump and slide counts to use in fitness calculation
     public int JumpCount
     { get; set; } 
 
     public int SlideCount
     { get; set; }
+
+    // These are two ensure that the jumpCount doesn't get incremented too many times per frame
     float jumpCoolDown = 10f;
     float jumpCoolDownTimer;
 
@@ -26,12 +29,10 @@ public class AgentNN : MonoBehaviour
 
     void Update()
     {
-        if (jumpCoolDownTimer > 0)
-        {
+        if (jumpCoolDownTimer > 0) {
             jumpCoolDownTimer -= Time.deltaTime;
         }
-        else if (jumpCoolDownTimer < 0)
-        {
+        else if (jumpCoolDownTimer < 0) {
             jumpCoolDownTimer = 0f;
         }
 
@@ -39,18 +40,18 @@ public class AgentNN : MonoBehaviour
         float maxOutput = 0f;
         int maxOutputInd = 0;
         
-        for (int i = 0; i < nn.outputLayer.ColumnCount; i++)
-        {
-            if (nn.outputLayer[0, i] > maxOutput)
-            {
+        // Find the index of the output node with the maximum value
+        // (i.e. the move that the NN is most confident to take)
+        for (int i = 0; i < nn.outputLayer.ColumnCount; i++) {
+            if (nn.outputLayer[0, i] > maxOutput) {
                 maxOutput = nn.outputLayer[0, i];
                 maxOutputInd = i;
             }
         }
 
-        // Choose max output 
-        switch(maxOutputInd)
-        {
+        // Choose max output and perform the move corresponding to that output node
+        // (Which moves correspond to which output node was chosen arbitrarily)
+        switch(maxOutputInd) {
             // LEFT (A key)
             case 0:
                 movement.horizontal = -1f;
@@ -77,8 +78,7 @@ public class AgentNN : MonoBehaviour
 
             // JUMP (Spacebar)
             case 3:
-                if (jumpCoolDownTimer == 0)
-                {  
+                if (jumpCoolDownTimer == 0) {  
                     movement.horizontal = 0f;
                     movement.isJumpPressed = true;
                     movement.isSliding = false;
@@ -87,7 +87,6 @@ public class AgentNN : MonoBehaviour
                     jumpCoolDownTimer = jumpCoolDown;   
 
                     JumpCount++;
-
                 }
                 break;
 

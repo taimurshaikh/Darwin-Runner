@@ -27,8 +27,7 @@ public class OptionsMenu : MonoBehaviour
     public void UpdateSFXVolume()
     {
         // All other sounds other than 0th item are sfx, so update volume of all of them to sfx slider value
-        for (int i = 1; i < am.sounds.Length; i++)
-        {
+        for (int i = 1; i < am.sounds.Length; i++) {
             am.UpdateVolume(am.sounds[i], sfxSlider.value);
         }
     }

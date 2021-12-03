@@ -18,8 +18,7 @@ public class FollowPlayer : MonoBehaviour
     void Update()
     {
         agents = GameObject.FindGameObjectsWithTag("Agent");
-        if (agents.Count() > 0)
-        {
+        if (agents.Count() > 0) {
             slowestAgentSpeed = agents.Min(agents => agents.GetComponent<PlayerMove>().forwardSpeed);
             transform.Translate(new Vector3(0f, 0f, slowestAgentSpeed * moveSpeed * Time.deltaTime), Space.World);         
         }

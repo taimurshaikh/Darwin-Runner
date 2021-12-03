@@ -9,14 +9,15 @@ public class GAParamInput : MonoBehaviour
     string popSize = "";
     public Text mrText;
     public Text psText;
-    
     public GameObject mainMenu;
 
     [HideInInspector]
-    public int ps;
+    public int PS
+    { get; set; }
 
     [HideInInspector]
-    public float mr;
+    public float MR
+    { get; set; }
 
     GameObject holder;
 
@@ -24,21 +25,20 @@ public class GAParamInput : MonoBehaviour
     {
         holder = GameObject.Find("Holder");
     }
+
     public void StoreData()
     {   
         mutationRate = mrText.text;
         popSize = psText.text;
 
-        if (!ValidateData(mutationRate, popSize))
-        {
+        if (!ValidateData(mutationRate, popSize)) {
             Debug.Log("Invalid input");
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
-        else
-        {
-            ps = int.Parse(popSize);
-            mr = float.Parse(mutationRate);
-            holder.GetComponent<HoldValues>().Hold();
+        else {
+            PS = int.Parse(popSize);
+            MR = float.Parse(mutationRate);
+            holder.GetComponent<HoldValues>().HoldGAParams();
             mainMenu.GetComponent<MainMenu>().StartVisualisation();
         }
     }
@@ -47,18 +47,15 @@ public class GAParamInput : MonoBehaviour
     {
         float mrFlt;
         int psInt;
-        try
-        {
+        try {
             mrFlt = float.Parse(mr);
             psInt = int.Parse(ps);
         }
-        catch
-        {
+        catch {
             return false;
         }
 
-        if (mrFlt < 0f || mrFlt > 1f || psInt < 2 || psInt > 50)
-        {
+        if (mrFlt < 0f || mrFlt > 1f || psInt < 2 || psInt > 50) {
             return false;
         }
 

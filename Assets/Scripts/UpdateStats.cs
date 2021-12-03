@@ -8,11 +8,7 @@ public class UpdateStats : MonoBehaviour
     public TextMeshPro txt;
     GAManager gm;
     void Start()
-    {
-        gm = FindObjectOfType<GAManager>(); 
-        Debug.Log(txt);
-        string newText = "lol get fuked";
-        txt.text = newText; 
+    { 
     }
 
     void Update()

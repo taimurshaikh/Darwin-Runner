@@ -20,14 +20,10 @@ public class CourseManager : MonoBehaviour
     {
         zSpawn = 0f;
         ClearActiveTiles();
-        for (int i = 0; i < numTiles; i++)
-        {
-            if (i == 0)
-            {
+        for (int i = 0; i < numTiles; i++) {
+            if (i == 0) {
                 SpawnTile(0);
-            }
-            else
-            {
+            } else {
                 SpawnTile(Random.Range(0, prefabs.Length));
             }
         }  
@@ -35,8 +31,7 @@ public class CourseManager : MonoBehaviour
     void Update()
     {
         // Checks if player has reached the end of the tile they are on
-        if (cam.position.z - 50 > zSpawn - (numTiles * tileLength))
-        {
+        if (cam.position.z - 50 > zSpawn - (numTiles * tileLength)) {
             // Spawn random new tile from prefabs list
             SpawnTile(Random.Range(0 , prefabs.Length));
             DeleteTile();
@@ -56,8 +51,7 @@ public class CourseManager : MonoBehaviour
 
     void ClearActiveTiles()
     {
-        foreach (GameObject tile in activeTiles)
-        {
+        foreach (GameObject tile in activeTiles) {
             Destroy(tile);
         }
         activeTiles.Clear();

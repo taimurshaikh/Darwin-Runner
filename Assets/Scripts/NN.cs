@@ -12,16 +12,10 @@ public class NN
     public static int numInputs = 10;
     public static int numOutputs = 5;
 
-    // This is needed for Crossover in GAManager
-    public static int numInputWeights = numInputs * numHiddenNodes;
-    public static int numHiddenToHiddenWeights = numHiddenNodes * numHiddenNodes * (numHiddenLayers-1);
-    public static int numOutputWeights = numHiddenNodes * numOutputs;
-    public static int totalWeights = numInputWeights + numHiddenToHiddenWeights + numOutputWeights;
-
     // 1 x 10 matrix as there are 10 inputs
     public Matrix<float> inputLayer = Matrix<float>.Build.Dense(1, numInputs);
     
-    // There are a dynamic number of hidden layers so we need a list of matrices
+    // We can modify the number of hidden layers if we want so we need a list of matrices
     public List<Matrix<float>> hiddenLayers = new List<Matrix<float>>();
 
     // 5 outputs

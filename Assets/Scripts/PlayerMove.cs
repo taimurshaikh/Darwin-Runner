@@ -137,9 +137,7 @@ public class PlayerMove : MonoBehaviour
             anim.SetBool("Run", false);
             anim.SetBool("Slide", false);
             anim.SetBool("Fall", true);
-
         }
-
        moveCharacter(movement);             
     }
 

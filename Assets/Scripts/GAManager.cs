@@ -55,8 +55,8 @@ public class GAManager : MonoBehaviour
 
         // Using the holder object that wasn't destroyed from the Menu scene before this to assign user-defined params
         hold = GameObject.FindWithTag("Holder").GetComponent<HoldValues>();
-        mutationRate = hold.mr;
-        popSize = hold.ps;
+        mutationRate = hold.MR;
+        popSize = hold.PS;
         gm = GameObject.FindWithTag("GameManager").GetComponent<GameManager>();
     }
 
@@ -91,7 +91,7 @@ public class GAManager : MonoBehaviour
         float r = Random.Range(0f, 1f);
 
         // Keep subtracting probabilities until you get less than zero
-        // Higher probabilities will be more likely to be fixed since they will
+        // Higher probabilities will be more likely to be selected since they will
         // Subtract a larger number towards zero
         while (r > 0) {
             r -= Fitnesses[index];
@@ -101,6 +101,7 @@ public class GAManager : MonoBehaviour
 
         // Go back one
         index--;
+ 
         NN res = MatingPool[index];
 
         return res;
@@ -162,7 +163,7 @@ public class GAManager : MonoBehaviour
             offset = 1;
             nextGen.Add(MatingPool[MatingPool.Count - 2]);
         }
-
+        Fitnesses = normalizeFitnesses();
         for (int i = 0; i < Mathf.Floor(popSize / 2) - offset; i++) {
             NN parentA = selectParent();
             NN parentB = selectParent();
@@ -205,6 +206,19 @@ public class GAManager : MonoBehaviour
     public float AverageFitness()
     {
         return Fitnesses.Sum() / popSize;
+    }
+
+    private List<float> normalizeFitnesses()
+    {
+        float minFitness = Fitnesses.Min();
+        float maxFitness = Fitnesses.Max();
+        float deltaF = maxFitness - minFitness; 
+        List<float> normalizedFitnesses = new List<float>();
+        foreach (float fitness in Fitnesses) {
+            normalizedFitnesses.Add((fitness - minFitness) / deltaF);
+        }
+
+        return normalizedFitnesses;
     }
 
     private void clearGAParams() 
