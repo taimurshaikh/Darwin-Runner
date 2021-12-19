@@ -17,6 +17,6 @@ public class StatManager : MonoBehaviour
 
     void Update()
     {
-        text.text  = $"Pop Size: {hold.PS}\nMutation Rate: {hold.MR}\n\nCurrent Gen: {genetic.GenerationNum}\nAgents Remaining: {GameObject.FindGameObjectsWithTag("Agent").Length}\nMax Fitness: {(genetic.Fitnesses.Count > 0 ? genetic.Fitnesses.Max(): 0f)}";
+        text.text  = $"Pop Size: {hold.PS}\nMutation Rate: {hold.MR}\n\nCurrent Gen: {genetic.GenerationNum}\nAgents Remaining: {GameObject.FindGameObjectsWithTag("Agent").Length}\nMax Fitness: {(genetic.maxFitness)}";
     }
 }

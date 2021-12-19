@@ -35,6 +35,9 @@ public class GAManager : MonoBehaviour
     { get; set; }
     public static GAManager instance;
 
+    const float fitnessMult = 0.01f;
+
+    public float maxFitness = 0f;
     void Awake()
     {
         if (instance == null) {
@@ -56,8 +59,13 @@ public class GAManager : MonoBehaviour
         // Using the holder object that wasn't destroyed from the Menu scene before this to assign user-defined params
         hold = GameObject.FindWithTag("Holder").GetComponent<HoldValues>();
         mutationRate = hold.MR;
+        // TEST 14
+        // Debug.Log($"True Mutation Rate: {mutationRate}");
+
         popSize = hold.PS;
         gm = GameObject.FindWithTag("GameManager").GetComponent<GameManager>();
+
+        GenerationNum = 1;
     }
 
     void Start()    
@@ -65,6 +73,13 @@ public class GAManager : MonoBehaviour
         initPop(); 
     }
 
+    private void Update()
+    {
+        if (GenerationNum < 1) {
+            GenerationNum = 1;
+        }
+    }
+    
     private void initPop()
     {   
         for (int i = 0; i < popSize; i++) {
@@ -77,8 +92,11 @@ public class GAManager : MonoBehaviour
     {
         float res = agent.position.z;
         if (jumpCount > 0 && slideCount > 0) {
-            res -= ((1/jumpCount) + (1/slideCount));
+            res -= (fitnessMult * (jumpCount + slideCount));
         } 
+        if (res > maxFitness) {
+            maxFitness = res;
+        }
         return res;
     }
 
@@ -157,26 +175,76 @@ public class GAManager : MonoBehaviour
     public void EndGeneration()
     {
         nextGen.Clear();
-        nextGen.Add(MatingPool[MatingPool.Count - 1]);
-        int offset = 0;
-        if (popSize % 2 == 0) {
-            offset = 1;
-            nextGen.Add(MatingPool[MatingPool.Count - 2]);
-        }
+        NN elitism1 = MatingPool[MatingPool.Count - 1];
+        NN elitism2 = MatingPool[MatingPool.Count - 1];
+        nextGen.Add(elitism1);
+        nextGen.Add(elitism2);
         Fitnesses = normalizeFitnesses();
-        for (int i = 0; i < Mathf.Floor(popSize / 2) - offset; i++) {
+        int offset = 0;
+        if (MatingPool.Count % 2 != 0) {
+            offset = 1;
+        }
+        // TEST 26
+            // Debug.Log("");
+            // Debug.Log("NEW GEN");
+            // foreach (float f in Fitnesses)
+            // {
+            //     Debug.Log(f);
+            // }
+        for (int i = 0; i < Mathf.Floor(popSize / 2) + offset; i++) {
             NN parentA = selectParent();
             NN parentB = selectParent();
+
+            // TEST 29
+            // if (parentA == elitism1 && parentB == elitism2) {
+            //     Debug.Log("BOTH");
+            // } else if (parentA == elitism1 || parentB == elitism2) {
+            //     Debug.Log("ONE");
+            // } else {
+            //     Debug.Log("NEITHER");
+            // }
+        
+            // TEST 30
+            if (parentA.weights == parentB.weights) {
+               Debug.Log("TRUE");
+            } 
             (NN childA, NN childB) = crossover(parentA, parentB);
+            // TEST 31
+            // Debug.Log("PARENT A");
+            // for (int j = 0; j < parentA.weights.Count(); j++) {
+            //     if (j % 2 == 0) {
+            //         Debug.Log(parentA.weights[j]);
+            //     }
+            // }
+            // Debug.Log("CHILD A");
+            // for (int j = 0; j < childA.weights.Count(); j++) {
+            //     if (j % 2 == 0) {
+            //         Debug.Log(childA.weights[j]);
+            //     }
+            // }
+            // Debug.Log("PARENT B");
+            // for (int j = 0; j < parentB.weights.Count(); j++) {
+            //     if (j % 2 != 0) {
+            //         Debug.Log(parentB.weights[j]);
+            //     }
+            // }
+            // Debug.Log("CHILD B");
+            // for (int j = 0; j < childB.weights.Count(); j++) {
+            //      if (j % 2 != 0) {
+            //         Debug.Log(childB.weights[j]);
+            //     }
+            // }
             nextGen.Add(mutate(childA));
             nextGen.Add(mutate(childB));
         }
+
         MatingPool.Clear();
         Fitnesses.Clear();
         Population.Clear();
         
         GenerationNum++;
-
+        // TEST 12
+        // Debug.Log($"True Gen Num: {GenerationNum}");
         Initialising = true;
     }
 
@@ -205,7 +273,10 @@ public class GAManager : MonoBehaviour
 
     public float AverageFitness()
     {
-        return Fitnesses.Sum() / popSize;
+        float avg = Fitnesses.Sum() / popSize; 
+        // TEST 11
+        // Debug.Log($"Average Fitness for Gen {GenerationNum}: {avg}");
+        return avg;
     }
 
     private List<float> normalizeFitnesses()
@@ -217,7 +288,15 @@ public class GAManager : MonoBehaviour
         foreach (float fitness in Fitnesses) {
             normalizedFitnesses.Add((fitness - minFitness) / deltaF);
         }
-
+        // TEST 37
+        // foreach (float f in Fitnesses)
+        // {
+        //     Debug.Log(f);
+        // }
+        // foreach (float f in normalizedFitnesses)
+        // {
+        //     Debug.Log(f);
+        // }
         return normalizedFitnesses;
     }
 

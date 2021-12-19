@@ -20,9 +20,13 @@ public class GameManager : MonoBehaviour
         }
         DontDestroyOnLoad(gameObject);
 
-        genetic = GameObject.Find("GAManager").GetComponent<GAManager>();
-        hold = GameObject.Find("Holder").GetComponent<HoldValues>();
-        graph = GameObject.Find("WindowGraph").GetComponent<WindowGraph>();
+        if (SceneManager.GetActiveScene().buildIndex == 0) {
+            Destroy(gameObject);
+        } else {
+            genetic = GameObject.Find("GAManager").GetComponent<GAManager>();
+            hold = GameObject.Find("Holder").GetComponent<HoldValues>();
+            graph = GameObject.Find("WindowGraph").GetComponent<WindowGraph>();
+        }
     }
 
     private void LateUpdate()

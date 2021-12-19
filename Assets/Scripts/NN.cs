@@ -12,6 +12,9 @@ public class NN
     public static int numInputs = 10;
     public static int numOutputs = 5;
 
+    // TEST 23
+    // public Matrix<float> testMat = Matrix<float>.Build.Dense(1, 3);
+
     // 1 x 10 matrix as there are 10 inputs
     public Matrix<float> inputLayer = Matrix<float>.Build.Dense(1, numInputs);
     
@@ -35,10 +38,24 @@ public class NN
         outputLayer.Clear();
         weights.Clear();
         biases.Clear();
-        
+        // TEST 23
+        //Test();
         // Populate hidden layers
         PopulateNN();
         RandomiseWeights();
+    }
+
+    public void Test() {
+        
+        // TEST 23
+        // testMat = Matrix<float>.Build.Dense(1, 3);
+
+        // testMat.Clear();
+        // testMat[0, 0] = Mathf.NegativeInfinity;
+        // testMat[0, 1] = 0;
+        // testMat[0, 2] = Mathf.Infinity;
+        // testMat = testMat.PointwiseTanh();
+        // Debug.Log(testMat);
     }
 
     public void PopulateNN()
