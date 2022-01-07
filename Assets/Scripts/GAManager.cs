@@ -175,8 +175,8 @@ public class GAManager : MonoBehaviour
     public void EndGeneration()
     {
         nextGen.Clear();
-        NN elitism1 = MatingPool[MatingPool.Count - 1];
-        NN elitism2 = MatingPool[MatingPool.Count - 1];
+        NN elitism1 = MatingPool[Fitnesses.IndexOf(Fitnesses.Max()) - 1];
+        NN elitism2 = MatingPool[MatingPool.Count - 2];
         nextGen.Add(elitism1);
         nextGen.Add(elitism2);
         Fitnesses = normalizeFitnesses();
@@ -196,18 +196,18 @@ public class GAManager : MonoBehaviour
             NN parentB = selectParent();
 
             // TEST 29
-            // if (parentA == elitism1 && parentB == elitism2) {
-            //     Debug.Log("BOTH");
-            // } else if (parentA == elitism1 || parentB == elitism2) {
-            //     Debug.Log("ONE");
-            // } else {
-            //     Debug.Log("NEITHER");
-            // }
+            if ((parentA == elitism1 && parentB == elitism2) || (parentA == elitism2 && parentB == elitism1)) {
+                Debug.Log("BOTH");
+            } else if (parentA == elitism1 || parentB == elitism1 || parentA == elitism2 || parentB == elitism2) {
+                Debug.Log("ONE");
+            } else {
+                Debug.Log("NEITHER");
+            }
         
             // TEST 30
-            if (parentA.weights == parentB.weights) {
-               Debug.Log("TRUE");
-            } 
+            // if (parentA.weights == parentB.weights) {
+            //    Debug.Log("TRUE");
+            // } 
             (NN childA, NN childB) = crossover(parentA, parentB);
             // TEST 31
             // Debug.Log("PARENT A");

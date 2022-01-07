@@ -1345,36 +1345,6 @@ MonoBehaviour:
     pitch: 1
     loop: 1
     source: {fileID: 0}
-  - name: Die
-    clip: {fileID: 8300000, guid: cac47a212124f354f8a28a1c0a42fda3, type: 3}
-    volume: 0
-    pitch: 1
-    loop: 0
-    source: {fileID: 0}
-  - name: Jump
-    clip: {fileID: 8300000, guid: 009088d5c8460704db898409c6c91b98, type: 3}
-    volume: 0
-    pitch: 0.56
-    loop: 0
-    source: {fileID: 0}
-  - name: Slide
-    clip: {fileID: 0}
-    volume: 0
-    pitch: 1.7
-    loop: 0
-    source: {fileID: 0}
-  - name: Block
-    clip: {fileID: 8300000, guid: e91540c9902dd3d47922a00e6787754c, type: 3}
-    volume: 0
-    pitch: 1
-    loop: 0
-    source: {fileID: 0}
-  - name: BouncePad
-    clip: {fileID: 8300000, guid: 5f19df34a0623714ea5acdbcafb8c70f, type: 3}
-    volume: 0
-    pitch: 1
-    loop: 0
-    source: {fileID: 0}
 --- !u!4 &497902126
 Transform:
   m_ObjectHideFlags: 0

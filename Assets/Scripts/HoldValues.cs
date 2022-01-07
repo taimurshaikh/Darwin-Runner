@@ -12,7 +12,9 @@ public class HoldValues : MonoBehaviour
     [HideInInspector]
     public float MR
     { get; set; }
-
+    [HideInInspector]
+    public float MusicVolume
+    { get; set; }
     [HideInInspector]
     public bool firstGen = true;
 
@@ -29,8 +31,8 @@ public class HoldValues : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-        //Debug.Log("HOLDER AWAKENING");
         GenerationNum = 1;
+        MusicVolume = 0.5f;
         DontDestroyOnLoad(gameObject);
     }
 
